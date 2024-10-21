@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/tmdb
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - TMDB_API_KEY=8640dd412b61ed1a2c9d63e96bb44728
+      - TMDB_AUTH_KEY=eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4NjQwZGQ0MTJiNjFlZDFhMmM5ZDYzZTk2YmI0NDcyOCIsIm5iZiI6MTcyOTEwMjYxNi40NDY2MzksInN1YiI6IjY3MGZmZjYwZGI3OWM5Y2VhZTBlOThiYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.hxhUxwKdowzMamAEWwyOFb7DZL4uhaZP3VxLm2eZylc
+    depends_on:
+      - mongo
+      - redis
+
+  mongo:
+    image: mongo:4.4
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  mongo-data:
+    driver: local
